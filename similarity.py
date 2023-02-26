@@ -6,6 +6,7 @@ nlp = spacy.load('en_core_web_md')
 
 #=====Class====
 
+#creates movie class 
 class Movies:
     def __init__(self, title, description):
         self.title = title
@@ -19,11 +20,9 @@ class Movies:
         return(output)
     
 
-    
-
-
-
 #====Functions========
+
+#reads movies from txt file into program. 
 def read_movie_from_f():
     movie_list = []
 
@@ -34,49 +33,56 @@ def read_movie_from_f():
             split_contents = joined_contents.split(":") #split string by semicolon making a two list item
             title = split_contents[0]
             description = split_contents[1]
-            movie_object = Movies(title, description)
-            movie_list.append(movie_object)
+            movie_object = Movies(title, description)   #creates movie object to store information
+            movie_list.append(movie_object) #appends movie object to movie list.
         
     return(movie_list)
 
-
-
-#=======Program========
-
-
-movie_to_compare = """Will he save their world or destroy it? When the Hulk becomes too dangerous for the
-Earth, the Illuminati trick Hulk into a shuttle and launch him into space to a
-planet where the Hulk can live in peace. Unfortunately, Hulk land on the
-planet Sakaar where he is sold into slavery and trained as a gladiator.""" 
-
-movie_to_compare_nlp = nlp(movie_to_compare)
-
-#reads all movies into program
-all_movies = read_movie_from_f()
-
-similarities = []
-
-#checks similarity of descriptions between movies using NLP
-
-
+#Function uses NLP t check similarity of user provided movie description against list of movies. 
 def similarity_check(list_of_movies, movie_to_compare_nlp):
     for movies in all_movies:
         movie_description = movies.description
-        similarity = nlp(movie_description).similarity(movie_to_compare_nlp)
+        similarity = nlp(movie_description).similarity(movie_to_compare_nlp)    #NLP on movie descriptions
         rounded_similarity = round(similarity, 2)
-        similar_title = movies.title
+        similar_title = movies.title 
         similar_description = movies.description
         similarity_score = rounded_similarity
    
         return(similar_title, similar_description, similarity_score)
 
-answer = similarity_check(all_movies, movie_to_compare_nlp)
-print(answer[0])
+#=======Program========
 
+#Welcome message
+print("=====Movie Roulette=====")
+print("""
+Just enter the description of your favourite movie
+in the section below. And we will use our state of the
+art Machine Learning to give you a suggestion! 
+Get your popcorn ready!\n""")
 
+#User input of movie description
+user_suggestion = str(input("Please paste your description here: "))
 
+movie_to_compare = user_suggestion
 
-#new object with rounded similarity 
+#apply NLP module to movie descritpion given by user
+movie_to_compare_nlp = nlp(movie_to_compare)
+
+#reads all comparisson movies into program
+all_movies = read_movie_from_f()
+
+#checks similarity of descriptions between movies using NLP
+
+most_similar_movie = similarity_check(all_movies, movie_to_compare_nlp)
+
+suggested_title = most_similar_movie[0]
+suggested_description = most_similar_movie[1]
+similarity_score = most_similar_movie[2]
+
+#Presents similar movie to user. 
+print(" ")
+print(f"We suggest watching: {suggested_title} which scored {similarity_score}")
+print(suggested_description)
 
 
 
