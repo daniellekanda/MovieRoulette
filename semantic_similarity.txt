@@ -1,0 +1,2 @@
+https://github.com/daniellekanda/NLPTest/blob/main/semantic.py
+https://github.com/daniellekanda/MovieRoulette/blob/main/watch_next.py 
